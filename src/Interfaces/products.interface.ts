@@ -3,7 +3,7 @@ type rating ={
     count:number
 }
 
-export interface Product {
+export interface IProduct {
     id:string;
     tenantId:string;
     title: string;

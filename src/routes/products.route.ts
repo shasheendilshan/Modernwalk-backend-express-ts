@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { readFile, writeFile } from "fs";
 import {v4 as uuidv4} from 'uuid';
 import data from './../db.js';
-import { Product } from './../Interfaces/products.interface';
+import { IProduct } from './../Interfaces/products.interface';
 
 const productsRouter = express.Router();
 
@@ -14,11 +14,9 @@ productsRouter.post("/", async(req: Request, res: Response) => {
 
 if(req.body.product){
   const {tenantId,title,price,description,category,image,rating} = req.body?.product;
-
-
   if(tenantId&&title&&price&&description&&category&&image){
 
-      const product:Product = {
+ const product:IProduct = {
     id:uuidv4(),
     tenantId:tenantId,
     title: title,
