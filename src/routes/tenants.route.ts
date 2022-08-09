@@ -7,7 +7,7 @@ import { ITenant } from "./../Interfaces/tenant.interface";
 const tenantsRouter = express.Router();
 
 tenantsRouter.get("/", (req: Request, res: Response) => {
-  res.send(data.tenants);
+  res.status(200).send(data.tenants);
 });
 tenantsRouter.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
@@ -19,13 +19,13 @@ tenantsRouter.get("/:id", (req: Request, res: Response) => {
       message: "tenant found",
       data: tenant,
     };
-    res.send(JSON.stringify(response));
+    res.status(200).json(response);
   } else {
     const response = {
       message: "tenant not found",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(404).json(response);
   }
 });
 tenantsRouter.delete("/:id", (req: Request, res: Response) => {
@@ -49,12 +49,12 @@ tenantsRouter.delete("/:id", (req: Request, res: Response) => {
       message: "Tenant deleted successfully",
     };
 
-    res.send(JSON.stringify(response));
+    res.status(200).send(response);
   } else {
     const response = {
       message: "Invalid tenant Id",
     };
-    res.send(JSON.stringify(response));
+    res.status(400).json(response);
   }
 });
 
@@ -86,7 +86,7 @@ tenantsRouter.post("/", (req: Request, res: Response) => {
                 data: tenant,
               };
 
-              res.send(JSON.stringify(response));
+              res.status(201).json(response);
             }
           );
         });
@@ -96,21 +96,21 @@ tenantsRouter.post("/", (req: Request, res: Response) => {
           data: null,
         };
 
-        res.send(JSON.stringify(response));
+        res.status(409).json(response);
       }
     } else {
       const response = {
         message: "Tenant add Failed",
         data: null,
       };
-      res.send(JSON.stringify(response));
+      res.status(500).json(response);
     }
   } else {
     const response = {
       message: "Invalid request",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(400).json(response);
   }
 });
 
