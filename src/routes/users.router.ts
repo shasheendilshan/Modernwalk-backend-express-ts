@@ -7,7 +7,7 @@ import { IUser } from "./../Interfaces/user.interface";
 const usersRouter = express.Router();
 
 usersRouter.get("/", (req: Request, res: Response) => {
-  res.send(data.users);
+  res.status(200).send(data.users);
 });
 
 usersRouter.get("/:id", (req: Request, res: Response) => {
@@ -19,13 +19,13 @@ usersRouter.get("/:id", (req: Request, res: Response) => {
       message: "user found",
       data: user,
     };
-    res.send(JSON.stringify(response));
+    res.status(200).json(response);
   } else {
     const response = {
       message: "user not found",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(404).json(response);
   }
 });
 usersRouter.delete("/:id", (req: Request, res: Response) => {
@@ -45,12 +45,12 @@ usersRouter.delete("/:id", (req: Request, res: Response) => {
       message: "User Deleted successfully",
     };
 
-    res.send(JSON.stringify(response));
+    res.status(200).send(response);
   } else {
     const response = {
       message: "Invalid user Id",
     };
-    res.send(JSON.stringify(response));
+    res.status(400).json(response);
   }
 });
 
@@ -85,7 +85,7 @@ usersRouter.post("/", (req: Request, res: Response) => {
                 data: user,
               };
 
-              res.send(JSON.stringify(response));
+              res.status(201).json(response);
             }
           );
         });
@@ -95,21 +95,21 @@ usersRouter.post("/", (req: Request, res: Response) => {
           data: null,
         };
 
-        res.send(JSON.stringify(response));
+        res.status(409).json(response);
       }
     } else {
       const response = {
         message: "User add Failed",
         data: null,
       };
-      res.send(JSON.stringify(response));
+      res.status(500).json(response);
     }
   } else {
     const response = {
       message: "Invalid request",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(400).json(response);
   }
 });
 
