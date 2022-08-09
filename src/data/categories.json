@@ -1,6 +1,22 @@
 [
-    "electronics",
-    "jewelery",
-     "men's clothing",
-    "women's clothing"     
+  {
+    "id": "26112b7d-61a1-44a5-9216-7e376864ce90",
+    "name": "jewelery",
+    "tenantId": "aa571939-2c90-4e39-ba08-d16eecfb962e"
+  },
+  {
+    "id": "0bf430f0-2404-4b6a-8c42-1b2905342069",
+    "name": "electronics",
+    "tenantId": "aa571939-2c90-4e39-ba08-d16eecfb962e"
+  },
+  {
+    "id": "486d82de-70d1-4eaf-90c4-5ed612415af9",
+    "name": "men's clothing",
+    "tenantId": "aa571939-2c90-4e39-ba08-d16eecfb962e"
+  },
+  {
+    "id": "7e8c75f2-1a5a-4ec3-8fe8-614a77a98703",
+    "name": "women's clothing",
+    "tenantId": "aa571939-2c90-4e39-ba08-d16eecfb962e"
+  }
 ]
