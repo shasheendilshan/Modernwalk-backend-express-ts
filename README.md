@@ -1,4 +1,4 @@
-# Modern Walk Express API
+# Modern Walk Express Typescript API
 
 This app aims to replicate the functionality of the mock REST API created for the Modern Walk app created during the Frontend Training program.
 
@@ -21,34 +21,55 @@ This app aims to replicate the functionality of the mock REST API created for th
 
 #### Categories
 
-| Method | Path        | Description         |
-| ------ | ----------- | ------------------- |
-| GET    | /categories | Find all categories |
+| Method | Path           | Description         |
+| ------ | -------------- | ------------------- |
+| GET    | /v1/categories | Find all categories |
 
 #### Products
 
-| Method | Path      | Description            |
-| ------ | --------- | ---------------------- |
-| CREATE | /products | Create one new product |
-| GET    | /products | Find all products      |
+| Method | Path              | Description              |
+| ------ | ----------------- | ------------------------ |
+| CREATE | /v1/products      | Create one new product   |
+| GET    | /v1/products      | Find all products        |
+| GET    | /v1/products/{id} | Find one product by id   |
+| DELETE | /v1/products/{id} | Delete one product by id |
 
 #### Tenants
 
-| Method | Path     | Description      |
-| ------ | -------- | ---------------- |
-| GET    | /tenants | Find all tenants |
+| Method | Path             | Description             |
+| ------ | ---------------- | ----------------------- |
+| CREATE | /v1/tenants      | Create one new tenant   |
+| GET    | /v1/tenants      | Find all tenants        |
+| GET    | /v1/tenants/{id} | Find one tenant by id   |
+| DELETE | /v1/tenants/{id} | Delete one tenant by id |
 
 #### Users
 
-| Method | Path   | Description    |
-| ------ | ------ | -------------- |
-| GET    | /users | Find all users |
+| Method | Path           | Description           |
+| ------ | -------------- | --------------------- |
+| CREATE | /v1/users      | Create one new user   |
+| GET    | /v1/users      | Find all users        |
+| GET    | /v1/users/{id} | Find one user by id   |
+| DELETE | /v1/users/{id} | Delete one user by id |
 
-#### Task Completed
+## Task Completed
 
-get all product service created.
-create product service created.
+### date :- 2022/08/08
 
-get all users service created.
-get all categories service created.
-get all tenant service created.
+- get all product service created.
+- create product service created.
+- get all users service created.
+- get all categories service created.
+- get all tenant service created.
+
+### date :- 2022/08/09
+
+- product add service created.
+- product find by id service created.
+- product delete service created.
+- user add service created.
+- user find by id service created.
+- tenant delete service created.
+- tenant add service created.
+- tenant find by id service created.
+- tenant delete service created.
