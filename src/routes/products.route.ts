@@ -7,7 +7,7 @@ import { IProduct } from "./../Interfaces/products.interface";
 const productsRouter = express.Router();
 
 productsRouter.get("/", (req: Request, res: Response) => {
-  res.send(data.products);
+  res.status(200).send(data.products);
 });
 
 productsRouter.get("/:id", (req: Request, res: Response) => {
@@ -19,13 +19,13 @@ productsRouter.get("/:id", (req: Request, res: Response) => {
       message: "product found",
       data: product,
     };
-    res.send(JSON.stringify(response));
+    res.status(200).json(response);
   } else {
     const response = {
       message: "product not found",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(404).json(response);
   }
 });
 productsRouter.delete("/:id", (req: Request, res: Response) => {
@@ -95,20 +95,20 @@ productsRouter.post("/", async (req: Request, res: Response) => {
         data: product,
       };
 
-      res.send(JSON.stringify(response));
+      res.status(201).json(response);
     } else {
       const response = {
         message: "Data add Failed",
         data: null,
       };
-      res.send(JSON.stringify(response));
+      res.status(500).json(response);
     }
   } else {
     const response = {
       message: "Invalid request",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(400).json(response);
   }
 });
 
