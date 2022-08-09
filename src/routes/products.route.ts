@@ -28,6 +28,37 @@ productsRouter.get("/:id", (req: Request, res: Response) => {
     res.send(JSON.stringify(response));
   }
 });
+productsRouter.delete("/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const idCheck = data.products.find((product) => product.id === id);
+
+  if (idCheck) {
+    const newProductList = data.products.filter(
+      (product) => product?.id !== id
+    );
+
+    writeFile(
+      "./src/data/products.json",
+      JSON.stringify(newProductList),
+      (err) => {
+        if (err) throw err;
+      }
+    );
+
+    const response = {
+      message: "Product Deleted successfully",
+    };
+
+    res.send(JSON.stringify(response));
+  } else {
+    const response = {
+      message: "Invalid product Id",
+      data: null,
+    };
+    res.send(JSON.stringify(response));
+  }
+});
 
 productsRouter.post("/", async (req: Request, res: Response) => {
   if (req.body.product) {
