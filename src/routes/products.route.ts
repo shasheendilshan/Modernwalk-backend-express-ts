@@ -8,7 +8,30 @@ const productsRouter = express.Router();
 
 productsRouter.get("/", (req: Request, res: Response) => {
   res.send(data.products);
+
 });
+
+productsRouter.get("/:id", (req: Request, res: Response) => {
+   
+    const { id } = req.params;
+
+    const product = data.products.find((prod)=>prod.id===id);
+    if(product){
+       const response ={
+        message:"product found",
+        data:product
+       }
+       res.send(JSON.stringify(response));
+    }else{
+      const response ={
+        message:"product not found",
+        data:null
+       }
+       res.send(JSON.stringify(response));
+    }
+
+});
+
 
 productsRouter.post("/", async(req: Request, res: Response) => {
 
