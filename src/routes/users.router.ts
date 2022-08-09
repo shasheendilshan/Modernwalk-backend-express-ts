@@ -28,6 +28,32 @@ usersRouter.get("/:id", (req: Request, res: Response) => {
     res.send(JSON.stringify(response));
   }
 });
+usersRouter.delete("/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const userCheck: IUser | undefined = data.users.find(
+    (user) => user.id === id
+  );
+  if (userCheck) {
+    const newUserList = data.users.filter((user) => user?.id !== id);
+
+    writeFile("./src/data/users.json", JSON.stringify(newUserList), (err) => {
+      if (err) throw err;
+    });
+
+    const response = {
+      message: "User Deleted successfully",
+    };
+
+    res.send(JSON.stringify(response));
+  } else {
+    const response = {
+      message: "Invalid user Id",
+    };
+    res.send(JSON.stringify(response));
+  }
+});
+
 usersRouter.post("/", (req: Request, res: Response) => {
   if (req.body.user) {
     const { firstName, lastName, email, password } = req.body.user;
