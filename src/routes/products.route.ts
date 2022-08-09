@@ -50,13 +50,13 @@ productsRouter.delete("/:id", (req: Request, res: Response) => {
       message: "Product Deleted successfully",
     };
 
-    res.send(JSON.stringify(response));
+    res.status(200).send(response);
   } else {
     const response = {
       message: "Invalid product Id",
       data: null,
     };
-    res.send(JSON.stringify(response));
+    res.status(400).json(response);
   }
 });
 
