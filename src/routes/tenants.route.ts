@@ -28,6 +28,35 @@ tenantsRouter.get("/:id", (req: Request, res: Response) => {
     res.send(JSON.stringify(response));
   }
 });
+tenantsRouter.delete("/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+  const tenantCheck: ITenant | undefined = data.tenants.find(
+    (tenant) => tenant.id === id
+  );
+
+  if (tenantCheck) {
+    const newTenantsList = data.tenants.filter((user) => user?.id !== id);
+
+    writeFile(
+      "./src/data/tenants.json",
+      JSON.stringify(newTenantsList),
+      (err) => {
+        if (err) throw err;
+      }
+    );
+
+    const response = {
+      message: "Tenant deleted successfully",
+    };
+
+    res.send(JSON.stringify(response));
+  } else {
+    const response = {
+      message: "Invalid tenant Id",
+    };
+    res.send(JSON.stringify(response));
+  }
+});
 
 tenantsRouter.post("/", (req: Request, res: Response) => {
   if (req.body.tenant) {
