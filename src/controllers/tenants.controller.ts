@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import data from "./../db.js";
 import { ITenant } from "./../Interfaces/tenant.interface";
 import { fileWriter } from "./../helpers/JsonChange.helper";
+import data from "./../db";
 
 export const getAllTenants = () => {
   return {

@@ -21,9 +21,12 @@ This app aims to replicate the functionality of the mock REST API created for th
 
 #### Categories
 
-| Method | Path           | Description         |
-| ------ | -------------- | ------------------- |
-| GET    | /v1/categories | Find all categories |
+| Method | Path                | Description               |
+| ------ | ------------------- | ------------------------- |
+| CREATE | /v1/categories      | Create one new category   |
+| GET    | /v1/categories      | Find all categories       |
+| GET    | /v1/categories/{id} | Find one category by id   |
+| DELETE | /v1/categories/{id} | Delete one category by id |
 
 #### Products
 

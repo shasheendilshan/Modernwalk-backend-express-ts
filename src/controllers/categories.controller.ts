@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import data from "./../db.js";
 import { ICategory } from "./../Interfaces/category.interface";
 import { fileWriter } from "./../helpers/JsonChange.helper";
+import data from "./../db";
 
 export const getAllCategories = (tenantId: any) => {
   if (tenantId && typeof tenantId == "string") {

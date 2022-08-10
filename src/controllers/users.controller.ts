@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import data from "./../db.js";
 import { fileWriter } from "./../helpers/JsonChange.helper";
 import { IUser } from "./../Interfaces/user.interface";
+import data from "./../db";
 
 export const getAllUsers = (tenantId: any) => {
   if (tenantId && typeof tenantId == "string") {
