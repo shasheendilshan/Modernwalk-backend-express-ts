@@ -1,8 +1,4 @@
 import express, { Request, Response } from "express";
-import { readFile, writeFile } from "fs";
-import { v4 as uuidv4 } from "uuid";
-import data from "./../db.js";
-import { IProduct } from "./../Interfaces/products.interface";
 import {
   getAllProducts,
   getProductById,
