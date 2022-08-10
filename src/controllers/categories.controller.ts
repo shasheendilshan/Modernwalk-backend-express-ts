@@ -145,7 +145,7 @@ export const addCategory = (category: any) => {
         fileWriter("./src/data/categories.json", allCategories);
 
         const response = {
-          message: "Tenant added successfully",
+          message: "Category added successfully",
           data: category,
         };
 
