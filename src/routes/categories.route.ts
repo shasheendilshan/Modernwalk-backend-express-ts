@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import { readFile, writeFile } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import data from "./../db.js";
 import { ICategory } from "./../Interfaces/category.interface";
+import { fileWriter } from "./../helpers/JsonChange.helper";
 
 const categoriesRouter = express.Router();
 
@@ -77,19 +77,13 @@ categoriesRouter.delete("/:id", (req: Request, res: Response) => {
           category.id !== id && category.tenantId === tenantId
       );
 
-      writeFile(
-        "./src/data/categories.json",
-        JSON.stringify(newCategoryList),
-        (err) => {
-          if (err) throw err;
+      fileWriter("./src/data/categories.json", newCategoryList);
 
-          const response = {
-            message: "Category deleted successfully",
-          };
+      const response = {
+        message: "Category deleted successfully",
+      };
 
-          res.status(201).json(response);
-        }
-      );
+      res.status(201).json(response);
     } else {
       const response = {
         message: "category not found for tenant id or category id",
@@ -121,24 +115,18 @@ categoriesRouter.post("/", (req: Request, res: Response) => {
           tenantId: tenantId,
         };
 
-        let allCat: ICategory[] = data.categories;
+        let allCategories: ICategory[] = data.categories;
 
-        allCat.push(category);
+        allCategories.push(category);
 
-        writeFile(
-          "./src/data/categories.json",
-          JSON.stringify(allCat),
-          (err) => {
-            if (err) throw err;
+        fileWriter("./src/data/categories.json", allCategories);
 
-            const response = {
-              message: "Tenant added successfully",
-              data: category,
-            };
+        const response = {
+          message: "Tenant added successfully",
+          data: category,
+        };
 
-            res.status(201).json(response);
-          }
-        );
+        res.status(201).json(response);
       } else {
         const response = {
           message: "Category already added",
