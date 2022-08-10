@@ -3,150 +3,105 @@ import { ICategory } from "./../Interfaces/category.interface";
 import { fileWriter } from "./../helpers/JsonChange.helper";
 import data from "./../db";
 
-export const getAllCategories = (tenantId: any) => {
-  if (tenantId && typeof tenantId == "string") {
-    const categories: ICategory[] | undefined = data.categories.filter(
-      (category: ICategory) => category.tenantId === tenantId
-    );
-    if (categories.length > 0) {
-      const response = {
-        message: "all categories for this tenant",
-        data: categories,
-      };
-      return {
-        response: response,
-        status: 200,
-      };
-    } else {
-      const response = {
-        message: "no categories for this tenant",
-        data: categories,
-      };
+export default class CategoriesController {
+  categoryData;
 
-      return {
-        response: response,
-        status: 404,
-      };
-    }
-  } else {
-    const response = {
-      message: "Invalid request",
-      data: null,
-    };
-    return {
-      response: response,
-      status: 400,
-    };
+  constructor() {
+    this.categoryData = data.categories;
   }
-};
 
-export const getCategoryById = (tenantId: any, id: string) => {
-  if (id && tenantId) {
-    const category: ICategory | undefined = data.categories.find(
-      (category: ICategory) =>
-        category.id === id && category.tenantId === tenantId
-    );
-    if (category) {
-      const response = {
-        message: "category found",
-        data: category,
-      };
-
-      return {
-        response: response,
-        status: 200,
-      };
-    } else {
-      const response = {
-        message: "category not found",
-        data: null,
-      };
-      return {
-        response: response,
-        status: 404,
-      };
-    }
-  } else {
-    const response = {
-      message: "Invalid request",
-      data: null,
-    };
-    return {
-      response: response,
-      status: 400,
-    };
-  }
-};
-
-export const deleteCategoryById = (tenantId: any, id: string) => {
-  if (id && tenantId) {
-    const category: ICategory | undefined = data.categories.find(
-      (category: ICategory) =>
-        category.id === id && category.tenantId === tenantId
-    );
-    if (category) {
-      const newCategoryList: ICategory[] | undefined = data.categories.filter(
-        (category: ICategory) =>
-          category.id !== id && category.tenantId === tenantId
+  public getAllCategories(tenantId: any) {
+    if (tenantId && typeof tenantId == "string") {
+      const categories: ICategory[] | undefined = this.categoryData.filter(
+        (category: ICategory) => category.tenantId === tenantId
       );
-
-      fileWriter("./src/data/categories.json", newCategoryList);
-
-      const response = {
-        message: "Category deleted successfully",
-      };
-
-      return {
-        response: response,
-        status: 201,
-      };
-    } else {
-      const response = {
-        message: "category not found for tenant id or category id",
-        data: null,
-      };
-      return {
-        response: response,
-        status: 404,
-      };
-    }
-  } else {
-    const response = {
-      message: "Invalid request",
-      data: null,
-    };
-    return {
-      response: response,
-      status: 400,
-    };
-  }
-};
-
-export const addCategory = (category: any) => {
-  if (category) {
-    const { name, tenantId } = category;
-    if (name && tenantId) {
-      const categoryCheck = data.categories?.find(
-        (category: ICategory) =>
-          category.name === name && category.tenantId === tenantId
-      );
-
-      if (!categoryCheck) {
-        const category: ICategory = {
-          id: uuidv4(),
-          name: name,
-          tenantId: tenantId,
+      if (categories.length > 0) {
+        const response = {
+          message: "all categories for this tenant",
+          data: categories,
+        };
+        return {
+          response: response,
+          status: 200,
+        };
+      } else {
+        const response = {
+          message: "no categories for this tenant",
+          data: categories,
         };
 
-        let allCategories: ICategory[] = data.categories;
+        return {
+          response: response,
+          status: 404,
+        };
+      }
+    } else {
+      const response = {
+        message: "Invalid request",
+        data: null,
+      };
+      return {
+        response: response,
+        status: 400,
+      };
+    }
+  }
 
-        allCategories.push(category);
+  public getCategoryById = (tenantId: any, id: string) => {
+    if (id && tenantId) {
+      const category: ICategory | undefined = this.categoryData.find(
+        (category: ICategory) =>
+          category.id === id && category.tenantId === tenantId
+      );
+      if (category) {
+        const response = {
+          message: "category found",
+          data: category,
+        };
 
-        fileWriter("./src/data/categories.json", allCategories);
+        return {
+          response: response,
+          status: 200,
+        };
+      } else {
+        const response = {
+          message: "category not found",
+          data: null,
+        };
+        return {
+          response: response,
+          status: 404,
+        };
+      }
+    } else {
+      const response = {
+        message: "Invalid request",
+        data: null,
+      };
+      return {
+        response: response,
+        status: 400,
+      };
+    }
+  };
+
+  public deleteCategoryById = (tenantId: any, id: string) => {
+    if (id && tenantId) {
+      const category: ICategory | undefined = this.categoryData.find(
+        (category: ICategory) =>
+          category.id === id && category.tenantId === tenantId
+      );
+      if (category) {
+        const newCategoryList: ICategory[] | undefined =
+          this.categoryData.filter(
+            (category: ICategory) =>
+              category.id !== id && category.tenantId === tenantId
+          );
+
+        fileWriter("./src/data/categories.json", newCategoryList);
 
         const response = {
-          message: "Category added successfully",
-          data: category,
+          message: "Category deleted successfully",
         };
 
         return {
@@ -155,33 +110,87 @@ export const addCategory = (category: any) => {
         };
       } else {
         const response = {
-          message: "Category already added",
+          message: "category not found for tenant id or category id",
           data: null,
         };
-
         return {
           response: response,
-          status: 409,
+          status: 404,
         };
       }
     } else {
       const response = {
-        message: "Category add Failed",
+        message: "Invalid request",
         data: null,
       };
       return {
         response: response,
-        status: 500,
+        status: 400,
       };
     }
-  } else {
-    const response = {
-      message: "Invalid request",
-      data: null,
-    };
-    return {
-      response: response,
-      status: 400,
-    };
-  }
-};
+  };
+
+  public addCategory = (category: any) => {
+    if (category) {
+      const { name, tenantId } = category;
+      if (name && tenantId) {
+        const categoryCheck = this.categoryData.find(
+          (category: ICategory) =>
+            category.name === name && category.tenantId === tenantId
+        );
+
+        if (!categoryCheck) {
+          const category: ICategory = {
+            id: uuidv4(),
+            name: name,
+            tenantId: tenantId,
+          };
+
+          let allCategories: ICategory[] = this.categoryData;
+
+          allCategories.push(category);
+
+          fileWriter("./src/data/categories.json", allCategories);
+
+          const response = {
+            message: "Category added successfully",
+            data: category,
+          };
+
+          return {
+            response: response,
+            status: 201,
+          };
+        } else {
+          const response = {
+            message: "Category already added",
+            data: null,
+          };
+
+          return {
+            response: response,
+            status: 409,
+          };
+        }
+      } else {
+        const response = {
+          message: "Category add Failed",
+          data: null,
+        };
+        return {
+          response: response,
+          status: 500,
+        };
+      }
+    } else {
+      const response = {
+        message: "Invalid request",
+        data: null,
+      };
+      return {
+        response: response,
+        status: 400,
+      };
+    }
+  };
+}
