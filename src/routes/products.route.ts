@@ -3,113 +3,38 @@ import { readFile, writeFile } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import data from "./../db.js";
 import { IProduct } from "./../Interfaces/products.interface";
+import {
+  getAllProducts,
+  getProductById,
+  deleteProductById,
+  addProduct,
+} from "./../controllers/products.controller";
 
 const productsRouter = express.Router();
 
 productsRouter.get("/", (req: Request, res: Response) => {
-  res.status(200).send(data.products);
+  const { tenantId } = req.query;
+  const { status, response } = getAllProducts(tenantId);
+  return res.status(status).send(response);
 });
 
 productsRouter.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-
-  const product = data.products.find((prod) => prod.id === id);
-  if (product) {
-    const response = {
-      message: "product found",
-      data: product,
-    };
-    res.status(200).json(response);
-  } else {
-    const response = {
-      message: "product not found",
-      data: null,
-    };
-    res.status(404).json(response);
-  }
+  const { tenantId } = req.query;
+  const { status, response } = getProductById(tenantId, id);
+  return res.status(status).send(response);
 });
 productsRouter.delete("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-
-  const idCheck = data.products.find((product) => product.id === id);
-
-  if (idCheck) {
-    const newProductList = data.products.filter(
-      (product) => product?.id !== id
-    );
-
-    writeFile(
-      "./src/data/products.json",
-      JSON.stringify(newProductList),
-      (err) => {
-        if (err) throw err;
-      }
-    );
-
-    const response = {
-      message: "Product Deleted successfully",
-    };
-
-    res.status(200).send(response);
-  } else {
-    const response = {
-      message: "Invalid product Id",
-      data: null,
-    };
-    res.status(400).json(response);
-  }
+  const { tenantId } = req.query;
+  const { status, response } = deleteProductById(tenantId, id);
+  return res.status(status).send(response);
 });
 
 productsRouter.post("/", async (req: Request, res: Response) => {
-  if (req.body.product) {
-    const { tenantId, title, price, description, category, image, rating } =
-      req.body?.product;
-    if (tenantId && title && price && description && category && image) {
-      const product: IProduct = {
-        id: uuidv4(),
-        tenantId: tenantId,
-        title: title,
-        price: price,
-        description: description,
-        category: category,
-        image: image,
-        rating: rating,
-      };
-
-      readFile("./dist/data/products.json", "utf8", (err, data) => {
-        if (err) throw err;
-        let allProducts = JSON.parse(data);
-        allProducts.push(product);
-
-        writeFile(
-          "./src/data/products.json",
-          JSON.stringify(allProducts),
-          (err) => {
-            if (err) throw err;
-          }
-        );
-      });
-
-      const response = {
-        message: "Product Added successfully",
-        data: product,
-      };
-
-      res.status(201).json(response);
-    } else {
-      const response = {
-        message: "Data add Failed",
-        data: null,
-      };
-      res.status(500).json(response);
-    }
-  } else {
-    const response = {
-      message: "Invalid request",
-      data: null,
-    };
-    res.status(400).json(response);
-  }
+  const { product } = req.body;
+  const { status, response } = addProduct(product);
+  return res.status(status).send(response);
 });
 
 export default productsRouter;
