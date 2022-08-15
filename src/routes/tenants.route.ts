@@ -1,31 +1,27 @@
 import express, { Request, Response } from "express";
-import {
-  getAllTenants,
-  getTenantById,
-  deleteTenantById,
-  addTenant,
-} from "./../controllers/tenants.controller";
+import TenantsController from "./../controllers/tenants.controller";
 
 const tenantsRouter = express.Router();
+const tenantController = new TenantsController();
 
 tenantsRouter.get("/", (req: Request, res: Response) => {
-  const { status, response } = getAllTenants();
+  const { status, response } = tenantController.getAllTenants();
   return res.status(status).send(response);
 });
 tenantsRouter.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status, response } = getTenantById(id);
+  const { status, response } = tenantController.getTenantById(id);
   return res.status(status).send(response);
 });
 tenantsRouter.delete("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status, response } = deleteTenantById(id);
+  const { status, response } = tenantController.deleteTenantById(id);
   return res.status(status).send(response);
 });
 
 tenantsRouter.post("/", (req: Request, res: Response) => {
   const { tenant } = req.body;
-  const { status, response } = addTenant(tenant);
+  const { status, response } = tenantController.addTenant(tenant);
   return res.status(status).send(response);
 });
 
