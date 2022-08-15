@@ -98,10 +98,7 @@ export default class CategoriesController {
       );
       if (category) {
         const newCategoryList: ICategory[] | undefined =
-          this.categoryData.filter(
-            (category: ICategory) =>
-              category.id !== id && category.tenantId === tenantId
-          );
+          this.categoryData.filter((category: ICategory) => category.id !== id);
 
         fileWriter("./src/data/categories.json", newCategoryList);
 
