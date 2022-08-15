@@ -2,25 +2,28 @@ import { v4 as uuidv4 } from "uuid";
 import { ITenant } from "./../Interfaces/tenant.interface";
 import { fileWriter } from "./../helpers/JsonChange.helper";
 import data from "./../db";
+import { TenantsService } from "./../services/tenants.service";
 
 export default class TenantsController {
-  tenantsData;
+  tenantsData: ITenant[];
+  tenantsService;
 
   constructor() {
     this.tenantsData = data.tenants;
+    this.tenantsService = new TenantsService(this.tenantsData);
   }
 
   public getAllTenants = () => {
+    const tenantsData = this.tenantsService.getAllTenants();
+
     return {
-      response: this.tenantsData,
+      response: tenantsData,
       status: 200,
     };
   };
 
   public getTenantById = (id: any) => {
-    const tenant: ITenant | undefined = this.tenantsData.find(
-      (tenant) => tenant.id === id
-    );
+    const tenant = this.tenantsService.getTenantById(id);
     if (tenant) {
       const response = {
         message: "tenant found",
@@ -43,14 +46,9 @@ export default class TenantsController {
   };
 
   public deleteTenantById = (id: any) => {
-    const tenant: ITenant | undefined = this.tenantsData.find(
-      (tenant) => tenant.id === id
-    );
+    const tenant = this.tenantsService.getTenantById(id);
     if (tenant) {
-      const newTenantsList = this.tenantsData.filter((user) => user?.id !== id);
-
-      fileWriter("./src/data/tenants.json", newTenantsList);
-
+      this.tenantsService.deleteTenantById(id);
       const response = {
         message: "Tenant deleted successfully",
       };
@@ -74,20 +72,16 @@ export default class TenantsController {
     if (tenant) {
       const { name, theme } = tenant;
       if (name) {
-        const nameCheck = this.tenantsData.find(
-          (tenant) => tenant.name === name
-        );
+        const nameCheck = this.tenantsService.checkTenantExist(name);
         if (!nameCheck) {
           const tenant: ITenant = {
             id: uuidv4(),
             name: name,
             theme: theme ? theme : data.defaultTheme,
           };
-          let allTenants: ITenant[] = this.tenantsData;
 
-          allTenants.push(tenant);
+          this.tenantsService.addTenant(tenant);
 
-          fileWriter("./src/data/tenants.json", allTenants);
           const response = {
             message: "Tenant added successfully",
             data: tenant,
