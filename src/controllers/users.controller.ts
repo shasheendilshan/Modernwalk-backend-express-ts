@@ -2,19 +2,20 @@ import { v4 as uuidv4 } from "uuid";
 import { fileWriter } from "./../helpers/JsonChange.helper";
 import { IUser } from "./../Interfaces/user.interface";
 import data from "./../db";
+import { UsersService } from "./../services/users.service";
 
 export default class UsersController {
   usersData;
+  usersService;
 
   constructor() {
     this.usersData = data.users;
+    this.usersService = new UsersService(this.usersData);
   }
 
   public getAllUsers = (tenantId: any) => {
     if (tenantId && typeof tenantId == "string") {
-      const users: IUser[] | undefined = this.usersData.filter(
-        (user: IUser) => user.tenantId === tenantId
-      );
+      const users = this.usersService.getAllUsers(tenantId);
       if (users.length > 0) {
         const response = {
           message: "all users for this tenant",
@@ -47,11 +48,9 @@ export default class UsersController {
     }
   };
 
-  public getUserById = (tenantId: any, id: string) => {
+  public getUserById = (id: string, tenantId: any) => {
     if (id && tenantId) {
-      const user: IUser | undefined = this.usersData.find(
-        (user: IUser) => user.id === id && user.tenantId === tenantId
-      );
+      const user = this.usersService.getUserByIdForTenant(id, tenantId);
       if (user) {
         const response = {
           message: "user found",
@@ -86,16 +85,9 @@ export default class UsersController {
 
   public deleteUserById = (tenantId: any, id: string) => {
     if (id && tenantId) {
-      const user: IUser | undefined = this.usersData.find(
-        (user: IUser) => user.id === id && user.tenantId === tenantId
-      );
+      const user = this.usersService.getUserById(id);
       if (user) {
-        const newUserList: IUser[] | undefined = this.usersData.filter(
-          (user: IUser) => user.id !== id && user.tenantId === tenantId
-        );
-
-        fileWriter("./src/data/users.json", newUserList);
-
+        this.usersService.deleteUserById(id);
         const response = {
           message: "User deleted successfully",
         };
@@ -129,9 +121,7 @@ export default class UsersController {
     if (user) {
       const { firstName, lastName, email, password, tenantId } = user;
       if (tenantId && firstName && lastName && email && password) {
-        const emailCheck = this.usersData?.find(
-          (user: IUser) => user.email === email && user.tenantId === tenantId
-        );
+        const emailCheck = this.usersService.checkUserExist(email, tenantId);
 
         if (!emailCheck) {
           const user: IUser = {
@@ -143,11 +133,7 @@ export default class UsersController {
             password: password,
           };
 
-          let allUsers: IUser[] = this.usersData;
-
-          allUsers.push(user);
-
-          fileWriter("./src/data/users.json", allUsers);
+          this.usersService.addUser(user);
 
           const response = {
             message: "user added successfully",
