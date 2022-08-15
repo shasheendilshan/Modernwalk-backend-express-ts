@@ -1,0 +1,6 @@
+{
+  "entryFile": "src/index.ts",
+  "spec": {
+    "outputDirectory": "dist"
+  }
+}

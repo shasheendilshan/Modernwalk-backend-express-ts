@@ -4,10 +4,11 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "prebuild": "rimraf ./dist",
+    "prebuild": "rimraf ./dist && npm run swagger",
     "build": "npm run prebuild && tsc",
     "start": "ts-node ./src/index.ts",
-    "dev": "npm run build && nodemon ./dist/index.js"
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
+    "swagger": "tsoa spec"
   },
   "keywords": [],
   "author": "",

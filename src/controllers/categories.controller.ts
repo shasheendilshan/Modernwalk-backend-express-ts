@@ -1,8 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
+import { Get, Route, Query, Tags } from "tsoa";
 import { ICategory } from "./../Interfaces/category.interface";
 import { fileWriter } from "./../helpers/JsonChange.helper";
 import data from "./../db";
 
+@Route("api/v1/categories")
+@Tags("Categories")
 export default class CategoriesController {
   categoryData;
 
@@ -10,7 +13,8 @@ export default class CategoriesController {
     this.categoryData = data.categories;
   }
 
-  public getAllCategories(tenantId: any) {
+  @Get("/")
+  public getAllCategories(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
       const categories: ICategory[] | undefined = this.categoryData.filter(
         (category: ICategory) => category.tenantId === tenantId
@@ -47,6 +51,7 @@ export default class CategoriesController {
     }
   }
 
+  @Get("/:id")
   public getCategoryById = (tenantId: any, id: string) => {
     if (id && tenantId) {
       const category: ICategory | undefined = this.categoryData.find(
@@ -130,7 +135,7 @@ export default class CategoriesController {
     }
   };
 
-  public addCategory = (category: any) => {
+  public addCategory = (category: ICategory) => {
     if (category) {
       const { name, tenantId } = category;
       if (name && tenantId) {
