@@ -1,20 +1,20 @@
 import { v4 as uuidv4 } from "uuid";
 import { IProduct } from "./../Interfaces/products.interface";
-import { fileWriter } from "./../helpers/JsonChange.helper";
 import data from "./../db";
+import { ProductsService } from "./../services/products.service";
 
 export default class ProductsController {
   productData;
+  productService;
 
   constructor() {
     this.productData = data.products;
+    this.productService = new ProductsService(this.productData);
   }
 
   public getAllProducts = (tenantId: any) => {
     if (tenantId && typeof tenantId == "string") {
-      const products: IProduct[] | undefined = this.productData.filter(
-        (product: IProduct) => product.tenantId === tenantId
-      );
+      const products = this.productService.getAllProducts(tenantId);
       if (products.length > 0) {
         const response = {
           message: "all products for this tenant",
@@ -49,10 +49,7 @@ export default class ProductsController {
 
   public getProductById = (tenantId: any, id: string) => {
     if (id && tenantId) {
-      const product: IProduct | undefined = this.productData.find(
-        (product: IProduct) =>
-          product.id === id && product.tenantId === tenantId
-      );
+      const product = this.productService.getProductByIdForTenant(id, tenantId);
       if (product) {
         const response = {
           message: "product found",
@@ -87,20 +84,11 @@ export default class ProductsController {
 
   public deleteProductById = (tenantId: any, id: string) => {
     if (id && tenantId) {
-      const product: IProduct | undefined = this.productData.find(
-        (product: IProduct) =>
-          product.id === id && product.tenantId === tenantId
-      );
+      const product = this.productService.getProductById(id);
       if (product) {
-        const newProductList: IProduct[] | undefined = this.productData.filter(
-          (product: IProduct) => product.id !== id
-        );
-
-        fileWriter("./src/data/products.json", newProductList);
-
+        this.productService.deleteProductById(id);
         const response = {
           message: "Product deleted successfully",
-          data: newProductList,
         };
 
         return {
@@ -134,9 +122,9 @@ export default class ProductsController {
       const { tenantId, title, price, description, category, image, rating } =
         product;
       if (tenantId && title && price && description && category && image) {
-        const productCheck = data.products?.find(
-          (product: IProduct) =>
-            product.title === title && product.tenantId === tenantId
+        const productCheck = this.productService.checkProductExist(
+          title,
+          tenantId
         );
 
         if (!productCheck) {
@@ -151,11 +139,7 @@ export default class ProductsController {
             rating: rating,
           };
 
-          let allProducts: IProduct[] = this.productData;
-
-          allProducts.push(product);
-
-          fileWriter("./src/data/products.json", allProducts);
+          this.productService.addProduct(product);
 
           const response = {
             message: "Product added successfully",
