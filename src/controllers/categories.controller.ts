@@ -1,24 +1,24 @@
 import { v4 as uuidv4 } from "uuid";
 import { Get, Route, Query, Tags } from "tsoa";
 import { ICategory } from "./../Interfaces/category.interface";
-import { fileWriter } from "./../helpers/JsonChange.helper";
 import data from "./../db";
+import { CategoriesService } from "../services/categories.service";
 
 @Route("api/v1/categories")
 @Tags("Categories")
 export default class CategoriesController {
   categoryData;
+  categoryService;
 
   constructor() {
     this.categoryData = data.categories;
+    this.categoryService = new CategoriesService(this.categoryData);
   }
 
   @Get("/")
   public getAllCategories(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
-      const categories: ICategory[] | undefined = this.categoryData.filter(
-        (category: ICategory) => category.tenantId === tenantId
-      );
+      const categories = this.categoryService.getAllCategories(tenantId);
       if (categories.length > 0) {
         const response = {
           message: "all categories for this tenant",
@@ -54,9 +54,9 @@ export default class CategoriesController {
   @Get("/:id")
   public getCategoryById = (tenantId: any, id: string) => {
     if (id && tenantId) {
-      const category: ICategory | undefined = this.categoryData.find(
-        (category: ICategory) =>
-          category.id === id && category.tenantId === tenantId
+      const category = this.categoryService.getCategoryByIdForTenant(
+        id,
+        tenantId
       );
       if (category) {
         const response = {
@@ -90,17 +90,11 @@ export default class CategoriesController {
     }
   };
 
-  public deleteCategoryById = (tenantId: any, id: string) => {
-    if (id && tenantId) {
-      const category: ICategory | undefined = this.categoryData.find(
-        (category: ICategory) =>
-          category.id === id && category.tenantId === tenantId
-      );
+  public deleteCategoryById = (id: string) => {
+    if (id) {
+      const category = this.categoryService.getCategoryById(id);
       if (category) {
-        const newCategoryList: ICategory[] | undefined =
-          this.categoryData.filter((category: ICategory) => category.id !== id);
-
-        fileWriter("./src/data/categories.json", newCategoryList);
+        this.categoryService.deleteCategoryById(id);
 
         const response = {
           message: "Category deleted successfully",
@@ -136,11 +130,10 @@ export default class CategoriesController {
     if (category) {
       const { name, tenantId } = category;
       if (name && tenantId) {
-        const categoryCheck = this.categoryData.find(
-          (category: ICategory) =>
-            category.name === name && category.tenantId === tenantId
+        const categoryCheck = this.categoryService.checkCategoryExist(
+          name,
+          tenantId
         );
-
         if (!categoryCheck) {
           const category: ICategory = {
             id: uuidv4(),
@@ -148,11 +141,7 @@ export default class CategoriesController {
             tenantId: tenantId,
           };
 
-          let allCategories: ICategory[] = this.categoryData;
-
-          allCategories.push(category);
-
-          fileWriter("./src/data/categories.json", allCategories);
+          this.categoryService.addCategory(category);
 
           const response = {
             message: "Category added successfully",
