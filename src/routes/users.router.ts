@@ -12,14 +12,12 @@ usersRouter.get("/", (req: Request, res: Response) => {
 
 usersRouter.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { tenantId } = req.query;
-  const { status, response } = usersController.getUserById(id, tenantId);
+  const { status, response } = usersController.getUserById(id);
   return res.status(status).send(response);
 });
 usersRouter.delete("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { tenantId } = req.query;
-  const { status, response } = usersController.deleteUserById(tenantId, id);
+  const { status, response } = usersController.deleteUserById(id);
   return res.status(status).send(response);
 });
 

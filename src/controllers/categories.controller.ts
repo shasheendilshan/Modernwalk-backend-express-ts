@@ -1,18 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
-import { Get, Route, Query, Tags } from "tsoa";
-import { ICategory } from "./../Interfaces/category.interface";
-import data from "./../db";
+import { Get, Route, Query, Tags, Delete, Post, Body } from "tsoa";
+import { ICategory, INewCategory } from "./../Interfaces/category.interface";
 import { CategoriesService } from "../services/categories.service";
 
 @Route("api/v1/categories")
 @Tags("Categories")
 export default class CategoriesController {
-  categoryData;
   categoryService;
 
   constructor() {
-    this.categoryData = data.categories;
-    this.categoryService = new CategoriesService(this.categoryData);
+    this.categoryService = new CategoriesService();
   }
 
   @Get("/")
@@ -52,12 +49,9 @@ export default class CategoriesController {
   }
 
   @Get("/:id")
-  public getCategoryById = (tenantId: any, id: string) => {
-    if (id && tenantId) {
-      const category = this.categoryService.getCategoryByIdForTenant(
-        id,
-        tenantId
-      );
+  public getCategoryById(id: string) {
+    if (id) {
+      const category = this.categoryService.getCategoryById(id);
       if (category) {
         const response = {
           message: "category found",
@@ -88,9 +82,10 @@ export default class CategoriesController {
         status: 400,
       };
     }
-  };
+  }
 
-  public deleteCategoryById = (id: string) => {
+  @Delete("/:id")
+  public deleteCategoryById(id: string) {
     if (id) {
       const category = this.categoryService.getCategoryById(id);
       if (category) {
@@ -106,7 +101,7 @@ export default class CategoriesController {
         };
       } else {
         const response = {
-          message: "category not found for tenant id or category id",
+          message: "category not found for this category id",
           data: null,
         };
         return {
@@ -124,9 +119,10 @@ export default class CategoriesController {
         status: 400,
       };
     }
-  };
+  }
 
-  public addCategory = (category: ICategory) => {
+  @Post()
+  public addCategory(@Body() category: INewCategory) {
     if (category) {
       const { name, tenantId } = category;
       if (name && tenantId) {
@@ -183,5 +179,5 @@ export default class CategoriesController {
         status: 400,
       };
     }
-  };
+  }
 }

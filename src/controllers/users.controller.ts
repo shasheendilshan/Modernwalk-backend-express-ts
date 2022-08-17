@@ -1,19 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
-import { fileWriter } from "./../helpers/JsonChange.helper";
-import { IUser } from "./../Interfaces/user.interface";
-import data from "./../db";
+import { Get, Route, Query, Tags, Delete, Post, Body, Put } from "tsoa";
+import { INewUser, IUser } from "./../Interfaces/user.interface";
 import { UsersService } from "./../services/users.service";
 
+@Route("api/v1/users")
+@Tags("Users")
 export default class UsersController {
-  usersData;
   usersService;
 
   constructor() {
-    this.usersData = data.users;
-    this.usersService = new UsersService(this.usersData);
+    this.usersService = new UsersService();
   }
-
-  public getAllUsers = (tenantId: any) => {
+  @Get("/")
+  public getAllUsers(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
       const users = this.usersService.getAllUsers(tenantId);
       if (users.length > 0) {
@@ -46,11 +45,11 @@ export default class UsersController {
         status: 400,
       };
     }
-  };
-
-  public getUserById = (id: string, tenantId: any) => {
-    if (id && tenantId) {
-      const user = this.usersService.getUserByIdForTenant(id, tenantId);
+  }
+  @Get("/:id")
+  public getUserById(id: string) {
+    if (id) {
+      const user = this.usersService.getUserById(id);
       if (user) {
         const response = {
           message: "user found",
@@ -81,10 +80,10 @@ export default class UsersController {
         status: 400,
       };
     }
-  };
-
-  public deleteUserById = (tenantId: any, id: string) => {
-    if (id && tenantId) {
+  }
+  @Delete("/:id")
+  public deleteUserById(id: string) {
+    if (id) {
       const user = this.usersService.getUserById(id);
       if (user) {
         this.usersService.deleteUserById(id);
@@ -116,8 +115,10 @@ export default class UsersController {
         status: 400,
       };
     }
-  };
-  public addUser = (user: any) => {
+  }
+
+  @Post()
+  public addUser(@Body() user: INewUser) {
     if (user) {
       const { firstName, lastName, email, password, tenantId } = user;
       if (tenantId && firstName && lastName && email && password) {
@@ -175,5 +176,5 @@ export default class UsersController {
         status: 400,
       };
     }
-  };
+  }
 }

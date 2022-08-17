@@ -7,7 +7,7 @@
     "prebuild": "rimraf ./dist && npm run swagger",
     "build": "npm run prebuild && tsc",
     "start": "ts-node ./src/index.ts",
-    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
+    "start:dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
     "swagger": "tsoa spec"
   },
   "keywords": [],

@@ -1,33 +1,32 @@
 import { ITenant } from "./../Interfaces/tenant.interface";
-import { fileWriter } from "./../helpers/JsonChange.helper";
+import { fileWriter, fileReader } from "./../helpers/JsonChange.helper";
 
 export class TenantsService {
-  dataSource: ITenant[];
-
-  constructor(dataSource: ITenant[]) {
-    this.dataSource = dataSource;
-  }
-
   getAllTenants() {
-    return this.dataSource;
+    const tenantData = fileReader("./src/data/tenants.json");
+    return tenantData;
   }
 
   getTenantById(id: string) {
-    return this.dataSource.find((tenant: ITenant) => tenant.id == id);
+    const tenantData = fileReader("./src/data/tenants.json");
+    return tenantData.find((tenant: ITenant) => tenant.id == id);
   }
 
   deleteTenantById(id: string) {
-    const newTenantsList = this.dataSource.filter(
+    const tenantData = fileReader("./src/data/tenants.json");
+    const newTenantsList = tenantData.filter(
       (tenant: ITenant) => tenant.id !== id
     );
     fileWriter("./src/data/tenants.json", newTenantsList);
   }
   addTenant(tenant: ITenant) {
-    let allTenants = this.dataSource;
+    const tenantData = fileReader("./src/data/tenants.json");
+    let allTenants = tenantData;
     allTenants.push(tenant);
     fileWriter("./src/data/tenants.json", allTenants);
   }
   checkTenantExist(name: string) {
-    return this.dataSource.find((tenant) => tenant.name === name);
+    const tenantData = fileReader("./src/data/tenants.json");
+    return tenantData.find((tenant: ITenant) => tenant.name === name);
   }
 }

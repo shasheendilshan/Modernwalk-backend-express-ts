@@ -3,3 +3,8 @@ export interface ICategory {
   tenantId: string;
   name: string;
 }
+
+export interface INewCategory {
+  tenantId: string;
+  name: string;
+}

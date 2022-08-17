@@ -14,17 +14,12 @@ productsRouter.get("/", (req: Request, res: Response) => {
 
 productsRouter.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { tenantId } = req.query;
-  const { status, response } = productsController.getProductById(tenantId, id);
+  const { status, response } = productsController.getProductById(id);
   return res.status(status).send(response);
 });
 productsRouter.delete("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { tenantId } = req.query;
-  const { status, response } = productsController.deleteProductById(
-    tenantId,
-    id
-  );
+  const { status, response } = productsController.deleteProductById(id);
   return res.status(status).send(response);
 });
 

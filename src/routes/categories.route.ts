@@ -11,11 +11,7 @@ categoriesRouter.get("/", (req: Request, res: Response) => {
 });
 categoriesRouter.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { tenantId } = req.query;
-  const { status, response } = categoriesController.getCategoryById(
-    tenantId,
-    id
-  );
+  const { status, response } = categoriesController.getCategoryById(id);
   return res.status(status).send(response);
 });
 categoriesRouter.delete("/:id", (req: Request, res: Response) => {

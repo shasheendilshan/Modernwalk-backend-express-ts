@@ -6,3 +6,11 @@ export interface IUser {
   email: string;
   password: string;
 }
+
+export interface INewUser {
+  tenantId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}

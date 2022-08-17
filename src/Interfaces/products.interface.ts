@@ -1,16 +1,25 @@
-type rating ={
-    rate:number,
-    count:number
-}
+type rating = {
+  rate: number;
+  count: number;
+};
 
 export interface IProduct {
-    id:string;
-    tenantId:string;
-    title: string;
-    price: number;
-    description: string;
-    category: string;
-    image: string;
-    rating?:rating;
-    
+  id: string;
+  tenantId: string;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating?: rating;
+}
+
+export interface INewProduct {
+  tenantId: string;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating?: rating;
 }

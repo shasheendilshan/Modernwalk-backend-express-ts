@@ -1,28 +1,27 @@
 import { v4 as uuidv4 } from "uuid";
-import { ITenant } from "./../Interfaces/tenant.interface";
-import { fileWriter } from "./../helpers/JsonChange.helper";
+import { Get, Route, Tags, Delete, Post, Body } from "tsoa";
+import { INewTenant, ITenant } from "./../Interfaces/tenant.interface";
 import data from "./../db";
 import { TenantsService } from "./../services/tenants.service";
 
+@Route("api/v1/tenants")
+@Tags("Tenants")
 export default class TenantsController {
-  tenantsData: ITenant[];
   tenantsService;
-
   constructor() {
-    this.tenantsData = data.tenants;
-    this.tenantsService = new TenantsService(this.tenantsData);
+    this.tenantsService = new TenantsService();
   }
-
-  public getAllTenants = () => {
+  @Get("/")
+  public getAllTenants() {
     const tenantsData = this.tenantsService.getAllTenants();
 
     return {
       response: tenantsData,
       status: 200,
     };
-  };
-
-  public getTenantById = (id: any) => {
+  }
+  @Get("/:id")
+  public getTenantById(id: any) {
     const tenant = this.tenantsService.getTenantById(id);
     if (tenant) {
       const response = {
@@ -43,9 +42,10 @@ export default class TenantsController {
         status: 404,
       };
     }
-  };
+  }
 
-  public deleteTenantById = (id: any) => {
+  @Delete("/:id")
+  public deleteTenantById(id: any) {
     const tenant = this.tenantsService.getTenantById(id);
     if (tenant) {
       this.tenantsService.deleteTenantById(id);
@@ -66,9 +66,10 @@ export default class TenantsController {
         status: 400,
       };
     }
-  };
+  }
 
-  public addTenant = (tenant: any) => {
+  @Post()
+  public addTenant(@Body() tenant: INewTenant) {
     if (tenant) {
       const { name, theme } = tenant;
       if (name) {
@@ -122,5 +123,5 @@ export default class TenantsController {
         status: 400,
       };
     }
-  };
+  }
 }

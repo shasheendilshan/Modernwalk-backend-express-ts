@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
-import { IProduct } from "./../Interfaces/products.interface";
-import data from "./../db";
+import { INewProduct, IProduct } from "./../Interfaces/products.interface";
+import { Get, Route, Query, Tags, Delete, Post, Body } from "tsoa";
 import { ProductsService } from "./../services/products.service";
 
+@Route("api/v1/products")
+@Tags("Products")
 export default class ProductsController {
-  productData;
   productService;
-
   constructor() {
-    this.productData = data.products;
-    this.productService = new ProductsService(this.productData);
+    this.productService = new ProductsService();
   }
 
-  public getAllProducts = (tenantId: any) => {
+  @Get("/")
+  public getAllProducts(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
       const products = this.productService.getAllProducts(tenantId);
       if (products.length > 0) {
@@ -45,11 +45,12 @@ export default class ProductsController {
         status: 400,
       };
     }
-  };
+  }
 
-  public getProductById = (tenantId: any, id: string) => {
-    if (id && tenantId) {
-      const product = this.productService.getProductByIdForTenant(id, tenantId);
+  @Get("/:id")
+  public getProductById(id: string) {
+    if (id) {
+      const product = this.productService.getProductById(id);
       if (product) {
         const response = {
           message: "product found",
@@ -80,10 +81,11 @@ export default class ProductsController {
         status: 400,
       };
     }
-  };
+  }
 
-  public deleteProductById = (tenantId: any, id: string) => {
-    if (id && tenantId) {
+  @Delete("/:id")
+  public deleteProductById(id: string) {
+    if (id) {
       const product = this.productService.getProductById(id);
       if (product) {
         this.productService.deleteProductById(id);
@@ -97,7 +99,7 @@ export default class ProductsController {
         };
       } else {
         const response = {
-          message: "Product not found for tenant id or product id",
+          message: "Product not found for this product id",
           data: null,
         };
         return {
@@ -115,9 +117,10 @@ export default class ProductsController {
         status: 400,
       };
     }
-  };
+  }
 
-  public addProduct = (product: any) => {
+  @Post()
+  public addProduct(@Body() product: INewProduct) {
     if (product) {
       const { tenantId, title, price, description, category, image, rating } =
         product;
@@ -181,5 +184,5 @@ export default class ProductsController {
         status: 400,
       };
     }
-  };
+  }
 }

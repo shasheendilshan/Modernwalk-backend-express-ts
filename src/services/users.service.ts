@@ -1,37 +1,38 @@
-import { fileWriter } from "./../helpers/JsonChange.helper";
+import { fileWriter, fileReader } from "./../helpers/JsonChange.helper";
 import { IUser } from "./../Interfaces/user.interface";
 
 export class UsersService {
-  dataSource: IUser[];
-
-  constructor(dataSource: IUser[]) {
-    this.dataSource = dataSource;
-  }
-
   getAllUsers(tenantId: string) {
-    return this.dataSource.filter((user: IUser) => user.tenantId === tenantId);
+    const userData = fileReader("./src/data/users.json");
+    return userData.filter((user: IUser) => user.tenantId === tenantId);
   }
 
   getUserById(id: string) {
-    return this.dataSource.find((user: IUser) => user.id === id);
+    const userData = fileReader("./src/data/users.json");
+    return userData.find((user: IUser) => user.id === id);
   }
 
   getUserByIdForTenant(id: string, tenantId: string) {
-    return this.dataSource.find(
+    const userData = fileReader("./src/data/users.json");
+    return userData.find(
       (user: IUser) => user.id === id && user.tenantId === tenantId
     );
   }
+
   deleteUserById(id: string) {
-    const newUserList = this.dataSource.find((user: IUser) => user.id === id);
+    const userData = fileReader("./src/data/users.json");
+    const newUserList = userData.filter((user: IUser) => user.id != id);
     fileWriter("./src/data/users.json", newUserList);
   }
+
   addUser(user: IUser) {
-    let allUsers: IUser[] = this.dataSource;
+    let allUsers = fileReader("./src/data/users.json");
     allUsers.push(user);
     fileWriter("./src/data/users.json", allUsers);
   }
   checkUserExist(email: string, tenantId: string) {
-    return this.dataSource.find(
+    const userData = fileReader("./src/data/users.json");
+    return userData.find(
       (user: IUser) => user.email === email && user.tenantId === tenantId
     );
   }

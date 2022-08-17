@@ -1,41 +1,41 @@
 import { IProduct } from "./../Interfaces/products.interface";
-import { fileWriter } from "./../helpers/JsonChange.helper";
+import { fileWriter, fileReader } from "./../helpers/JsonChange.helper";
 
 export class ProductsService {
-  dataSource: IProduct[];
-
-  constructor(dataSource: IProduct[]) {
-    this.dataSource = dataSource;
-  }
-
   getAllProducts(tenantId: string) {
-    return this.dataSource.filter(
+    const productsData = fileReader("./src/data/products.json");
+    return productsData.filter(
       (product: IProduct) => product.tenantId === tenantId
     );
   }
 
   getProductById(id: string) {
-    return this.dataSource.find((product: IProduct) => product.id === id);
+    const productsData = fileReader("./src/data/products.json");
+    return productsData.find((product: IProduct) => product.id === id);
   }
 
   getProductByIdForTenant(id: string, tenantId: string) {
-    return this.dataSource.find(
+    const productsData = fileReader("./src/data/products.json");
+    return productsData.find(
       (product: IProduct) => product.id === id && product.tenantId === tenantId
     );
   }
   deleteProductById(id: string) {
-    const newProductList: IProduct[] = this.dataSource.filter(
+    const productsData = fileReader("./src/data/products.json");
+    const newProductList: IProduct[] = productsData.filter(
       (product: IProduct) => product.id !== id
     );
     fileWriter("./src/data/products.json", newProductList);
   }
   addProduct(product: IProduct) {
-    let allProducts: IProduct[] = this.dataSource;
+    const productsData = fileReader("./src/data/products.json");
+    let allProducts: IProduct[] = productsData;
     allProducts.push(product);
     fileWriter("./src/data/products.json", allProducts);
   }
   checkProductExist(title: string, tenantId: string) {
-    return this.dataSource.find(
+    const productsData = fileReader("./src/data/products.json");
+    return productsData.find(
       (product: IProduct) =>
         product.title === title && product.tenantId === tenantId
     );
