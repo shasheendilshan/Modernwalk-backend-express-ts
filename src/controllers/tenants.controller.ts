@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Get, Route, Tags, Delete, Post, Body } from "tsoa";
+import { Get, Route, Tags, Delete, Post, Body, Example } from "tsoa";
 import { INewTenant, ITenant } from "./../Interfaces/tenant.interface";
 import data from "./../db";
 import { TenantsService } from "./../services/tenants.service";
@@ -20,6 +20,7 @@ export default class TenantsController {
       status: 200,
     };
   }
+  @Example<string>("aa571939-2c90-4e39-ba08-d16eecfb962e")
   @Get("/:id")
   public getTenantById(id: any) {
     const tenant = this.tenantsService.getTenantById(id);
@@ -68,6 +69,33 @@ export default class TenantsController {
     }
   }
 
+  @Example<any>({
+    tenant: {
+      name: "asd",
+      theme: {
+        primary: "#D782BA",
+        secondary: "#EEB1D5",
+        btn_primary_normal: "#E18AD4",
+        btn_primary_hover: "#D782BA",
+        btn_primary_active: "#B879A3",
+        btn_primary_disabled: "#f3d1ee",
+        btn_outlined_hover: "#f3d1ee",
+        btn_outlined_active: "#d1b3c4",
+        btn_outlined_disabled: "#ffffff",
+        btn_danger_normal: "#E1273D",
+        btn_danger_hover: "#C01227",
+        btn_danger_active: "#9D0215",
+        btn_danger_outlined_hover: "#F9D4D8",
+        btn_danger_outlined_active: "#F0939E",
+        text_main: "#4E1D3D",
+        text_active: "#8E5B7D",
+        text_inactive: "#C6CBD5",
+        elephant_gray: "#F7F8F9",
+        elephant_contrast: "#F0F2F5",
+        error: "#FF5A43",
+      },
+    },
+  })
   @Post()
   public addTenant(@Body() tenant: INewTenant) {
     if (tenant) {

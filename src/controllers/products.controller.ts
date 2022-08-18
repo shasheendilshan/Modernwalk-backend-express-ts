@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { INewProduct, IProduct } from "./../Interfaces/products.interface";
-import { Get, Route, Query, Tags, Delete, Post, Body } from "tsoa";
+import { Get, Route, Query, Tags, Delete, Post, Body, Example } from "tsoa";
 import { ProductsService } from "./../services/products.service";
 
 @Route("api/v1/products")
@@ -10,7 +10,7 @@ export default class ProductsController {
   constructor() {
     this.productService = new ProductsService();
   }
-
+  @Example<string>("462d6730-b587-4782-807d-f539277d70cd")
   @Get("/")
   public getAllProducts(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
@@ -47,6 +47,7 @@ export default class ProductsController {
     }
   }
 
+  @Example<string>("ed548c03-89b6-49f4-b168-1e360d15a23a")
   @Get("/:id")
   public getProductById(id: string) {
     if (id) {
@@ -118,7 +119,19 @@ export default class ProductsController {
       };
     }
   }
-
+  @Example<any>({
+    product: {
+      tenantId: "462d6730-b587-4782-807d-f539277d70cd",
+      title: "Mens Casual Premium Slim Fit T-Shirts ",
+      price: 2000,
+      description:
+        "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.",
+      category: "men's clothing",
+      image:
+        "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
+      rating: { rate: 4.1, count: 259 },
+    },
+  })
   @Post()
   public addProduct(@Body() product: INewProduct) {
     if (product) {

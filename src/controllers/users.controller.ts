@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Get, Route, Query, Tags, Delete, Post, Body, Put } from "tsoa";
+import { Get, Route, Query, Tags, Delete, Post, Body, Example } from "tsoa";
 import { INewUser, IUser } from "./../Interfaces/user.interface";
 import { UsersService } from "./../services/users.service";
 
@@ -11,6 +11,7 @@ export default class UsersController {
   constructor() {
     this.usersService = new UsersService();
   }
+  @Example<string>("aa571939-2c90-4e39-ba08-d16eecfb962e")
   @Get("/")
   public getAllUsers(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
@@ -46,6 +47,7 @@ export default class UsersController {
       };
     }
   }
+  @Example<string>("c2dae815-aee7-4f84-843b-a84fccf68358")
   @Get("/:id")
   public getUserById(id: string) {
     if (id) {
@@ -116,7 +118,15 @@ export default class UsersController {
       };
     }
   }
-
+  @Example<any>({
+    user: {
+      tenantId: "aa571939-2c90-4e39-ba08-d16eecfb962e",
+      firstName: "selena",
+      lastName: "gomez",
+      email: "tom@gmail215656.com",
+      password: "10445609",
+    },
+  })
   @Post()
   public addUser(@Body() user: INewUser) {
     if (user) {

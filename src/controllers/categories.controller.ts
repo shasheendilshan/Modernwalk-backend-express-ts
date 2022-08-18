@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Get, Route, Query, Tags, Delete, Post, Body } from "tsoa";
+import { Get, Route, Query, Tags, Delete, Post, Body, Example } from "tsoa";
 import { ICategory, INewCategory } from "./../Interfaces/category.interface";
 import { CategoriesService } from "../services/categories.service";
 
@@ -11,7 +11,7 @@ export default class CategoriesController {
   constructor() {
     this.categoryService = new CategoriesService();
   }
-
+  @Example<string>("aa571939-2c90-4e39-ba08-d16eecfb962e")
   @Get("/")
   public getAllCategories(@Query() tenantId: any) {
     if (tenantId && typeof tenantId == "string") {
@@ -47,7 +47,7 @@ export default class CategoriesController {
       };
     }
   }
-
+  @Example<string>("7e8c75f2-1a5a-4ec3-8fe8-614a77a98703")
   @Get("/:id")
   public getCategoryById(id: string) {
     if (id) {
@@ -120,7 +120,12 @@ export default class CategoriesController {
       };
     }
   }
-
+  @Example<any>({
+    category: {
+      name: "crafting",
+      tenantId: "aa571939-2c90-4e39-ba08-d16eecfb962e",
+    },
+  })
   @Post()
   public addCategory(@Body() category: INewCategory) {
     if (category) {
